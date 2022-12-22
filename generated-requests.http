@@ -1,0 +1,32 @@
+### Create product
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Iphone 13",
+  "description": "Iphone 13",
+  "price": 1200
+}
+
+### Get all products
+GET http://localhost:8080/api/products
+
+
+### Create orders
+POST http://localhost:8081/api/orders
+Content-Type: application/json
+
+{
+  "orderLineItemsRequestList": [
+    {
+      "skuCode": "iphone_13",
+      "price": 1200,
+      "quantity": 1
+    },
+    {
+      "skuCode": "macbook_pro_13",
+      "price": 2200,
+      "quantity": 1
+    }
+  ]
+}
