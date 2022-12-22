@@ -5,11 +5,14 @@ import com.thiagosena.orderservice.controllers.payloads.OrderResponse;
 import com.thiagosena.orderservice.models.Order;
 import com.thiagosena.orderservice.models.OrderLineItems;
 import com.thiagosena.orderservice.repositories.OrderRepository;
+import com.thiagosena.orderservice.services.clients.InventoryResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +23,7 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final WebClient webClient;
 
     public OrderResponse placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
@@ -30,8 +34,31 @@ public class OrderService {
                 .map(OrderLineItems::of).toList();
         order.setOrderLineItemsList(orderLineItems);
 
+        List<String> skuCodes = order.getOrderLineItemsList()
+                .stream()
+                .map(OrderLineItems::getSkuCode).toList();
+
+        // Call inventory service and place order if product is in stock
+        InventoryResponse[] inventoryResponseArray = webClient.get()
+                .uri("http://localhost:8082/api/inventories",
+                        uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
+                .retrieve()
+                .bodyToMono(InventoryResponse[].class)
+                .block();
+
+        if (inventoryResponseArray == null || inventoryResponseArray.length == 0) {
+            throw new IllegalArgumentException("Product is not in stock, please try again later");
+        }
+
+        boolean allProductsInStock = Arrays.stream(inventoryResponseArray).allMatch(InventoryResponse::isInStock);
+
+        if (!allProductsInStock) {
+            throw new IllegalArgumentException("Product is not in stock, please try again later");
+        }
+
         Order orderSaved = orderRepository.save(order);
         log.info("Successfully saved order {}", orderSaved);
         return OrderResponse.of(orderSaved);
+
     }
 }

@@ -1,12 +1,11 @@
 package com.thiagosena.orderservice.models;
 
 import com.thiagosena.orderservice.controllers.payloads.OrderLineItemsRequest;
-import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -22,7 +21,7 @@ public class OrderLineItems {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @EqualsAndHashCode.Include
     @Column(name = "id", nullable = false, updatable = false, columnDefinition = "char(36)")
-    @JdbcTypeCode(SqlTypes.CHAR)
+    @Type(type = "uuid-char")
     private UUID id;
     private String skuCode;
     private BigDecimal price;
