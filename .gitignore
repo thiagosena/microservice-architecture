@@ -1,4 +1,6 @@
 target/
+mysql_keycloak_data
+realms
 rebel.xml
 .mvn
 !.mvn/wrapper/maven-wrapper.jar
