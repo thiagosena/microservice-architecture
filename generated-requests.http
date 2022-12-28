@@ -13,7 +13,7 @@ GET http://localhost:8080/api/products
 
 
 ### Create orders
-POST http://localhost:8081/api/orders
+POST http://localhost:8080/api/orders
 Content-Type: application/json
 
 {

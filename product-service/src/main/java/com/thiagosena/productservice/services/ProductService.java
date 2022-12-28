@@ -26,6 +26,7 @@ public class ProductService {
 
     public List<ProductResponse> getAllProducts() {
         val products = productRepository.findAll();
+        log.info("Getting all products");
         return products.stream().map(ProductResponse::of).toList();
     }
 }
