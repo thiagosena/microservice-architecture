@@ -19,13 +19,13 @@ Content-Type: application/json
 {
   "orderLineItemsRequestList": [
     {
-      "skuCode": "iphone_13",
+      "skuCode": "samsumg power",
       "price": 1200,
       "quantity": 1
     },
     {
-      "skuCode": "macbook_pro_13",
-      "price": 2200,
+      "skuCode": "macbook_air",
+      "price": 1100,
       "quantity": 1
     }
   ]
