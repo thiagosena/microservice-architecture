@@ -1,6 +1,5 @@
 target/
-mysql_keycloak_data
-realms
+docker
 rebel.xml
 .mvn
 !.mvn/wrapper/maven-wrapper.jar
